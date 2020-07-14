@@ -16,7 +16,7 @@ from util import adjust_learning_rate, warmup_learning_rate
 from util import set_optimizer, save_model
 from losses import SupConLoss
 import torchvision.models as models
-
+import torch.nn.functional as F
 try:
     import apex
     from apex import amp, optimizers
@@ -189,6 +189,8 @@ def train(train_loader, model, criterion, optimizer, epoch, opt):
         features = model(images)
         f1, f2 = torch.split(features, [bsz, bsz], dim=0)
         features = torch.cat([f1.unsqueeze(1), f2.unsqueeze(1)], dim=1)
+        features = F.normalize(features, dim = 2)
+
         if opt.method == 'SupCon':
             loss = criterion(features, labels)
         elif opt.method == 'SimCLR':
