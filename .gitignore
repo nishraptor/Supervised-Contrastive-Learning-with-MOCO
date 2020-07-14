@@ -5,3 +5,5 @@ configs/
 datasets/
 builder.py
 *.tar
+/save
+.ipynb
